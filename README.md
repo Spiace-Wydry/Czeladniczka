@@ -16,7 +16,16 @@ npm run dev                    # http://localhost:3000
 
 Local Supabase ports are shifted in `supabase/config.toml` (API 54521, DB 54522, Studio 54523) to avoid clashing with other local Supabase projects.
 
-Demo accounts (password `password123`): masters `henryk@`, `maria@`, `zbigniew@`, `marek@`, `andrzej@`, `teresa@`; apprentices `kacper@`, `julia@`, `oskar@` — all `@example.com`.
+### Example accounts (password for all: `password123`)
+
+| Role | Email | Who |
+|---|---|---|
+| Mistrz | `henryk@example.com` | Henryk Nowak, stolarz, Sochaczew |
+| Mistrz | `maria@example.com` | Maria Wójcik, tapicerka, Łowicz (has a 5,0 review) |
+| Czeladnik | `kacper@example.com` | Kacper Zieliński, 19, Sochaczew, no requests yet |
+| Czeladniczka | `julia@example.com` | Julia Kamińska, 21, Łowicz |
+
+More demo accounts with the same password: masters `zbigniew@`, `marek@`, `andrzej@`, `teresa@`; apprentices `oskar@`, `tomasz@`, `aleksandra@`, `bartosz@` — all `@example.com`.
 
 ### Test on a phone (same Wi-Fi)
 
