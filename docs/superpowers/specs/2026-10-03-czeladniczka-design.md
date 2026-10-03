@@ -2,6 +2,8 @@
 
 Source design: https://claude.ai/artifact/5me1TKwXJR2Gm2QtqYBBbL (7 mobile screens + style guide, Polish UI).
 
+> Implementation deviations (Nuxt 4 SPA, reduced component list, ~50 cities, no `available_now` for apprentice search) are recorded in `docs/superpowers/plans/2026-10-03-czeladniczka-mvp.md`.
+
 Czeladniczka connects apprentices (czeladnik/czeladniczka) with craft masters (mistrz). Apprentices search masters, save them, and apply; masters browse apprentices and invite them; either side accepts/declines. Apprentices with an accepted request can review the master.
 
 ## Stack
