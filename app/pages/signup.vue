@@ -50,15 +50,15 @@ async function submit() {
       </div>
     </header>
     <form class="page-body" @submit.prevent="submit">
-      <label class="field">Imię i nazwisko <input v-model="form.full_name" required minlength="2" maxlength="80" autocomplete="name"></label>
+      <label class="field">Imię i nazwisko <input v-model="form.full_name" required minlength="2" maxlength="80" autocomplete="name" placeholder="np. Jan Kowalski"></label>
       <label class="field">Miejscowość
         <select v-model="form.city_id" required>
           <option value="" disabled>Wybierz</option>
           <option v-for="c in cities" :key="c.id" :value="c.id">{{ c.name }}</option>
         </select>
       </label>
-      <label class="field">Email <input v-model="form.email" type="email" required autocomplete="email"></label>
-      <label class="field">Hasło <input v-model="form.password" type="password" required minlength="6" autocomplete="new-password"></label>
+      <label class="field">Email <input v-model="form.email" type="email" required autocomplete="email" placeholder="np. jan.kowalski@gmail.com"></label>
+      <label class="field">Hasło <input v-model="form.password" type="password" required minlength="6" autocomplete="new-password" placeholder="Co najmniej 6 znaków"></label>
       <p v-if="error" class="error">{{ error }}</p>
       <p v-if="info" class="tag">{{ info }}</p>
       <button class="btn" :disabled="busy">Załóż konto</button>

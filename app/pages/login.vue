@@ -29,8 +29,8 @@ async function submit() {
       </div>
     </header>
     <form class="page-body" @submit.prevent="submit">
-      <label class="field">Email <input v-model="form.email" type="email" required autocomplete="email"></label>
-      <label class="field">Hasło <input v-model="form.password" type="password" required autocomplete="current-password"></label>
+      <label class="field">Email <input v-model="form.email" type="email" required autocomplete="email" placeholder="np. jan.kowalski@gmail.com"></label>
+      <label class="field">Hasło <input v-model="form.password" type="password" required autocomplete="current-password" placeholder="Twoje hasło"></label>
       <p v-if="error" class="error">{{ error }}</p>
       <button class="btn" :disabled="busy">Zaloguj się</button>
       <p class="alt">Nie masz konta? <NuxtLink to="/signup">Załóż konto</NuxtLink></p>

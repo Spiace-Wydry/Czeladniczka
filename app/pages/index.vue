@@ -62,11 +62,11 @@ const points = [
 
 <style scoped>
 .welcome { position: relative; overflow: hidden; max-width: 480px; margin: 0 auto; min-height: 100dvh;
-  background: #FBE7A1; display: flex; flex-direction: column; padding: 364px 28px 36px; }
-.planks { position: absolute; left: 0; top: 0; width: 100%; height: 318px; display: block; }
-.logo { position: absolute; left: 50%; top: 236px; transform: translateX(-50%); display: flex; align-items: center;
+  background: #FBE7A1; display: flex; flex-direction: column; padding: 355px 28px 36px; }
+.planks { position: absolute; left: 0; top: -40px; width: 100%; height: 318px; display: block; }
+.logo { position: absolute; left: 50%; top: 196px; transform: translateX(-50%); display: flex; align-items: center;
   justify-content: center; width: 104px; height: 104px; border-radius: 30px; background: var(--brown); border: 5px solid #FBE7A1; }
-.hero { position: relative; margin-top: auto; display: flex; flex-direction: column; gap: 16px; }
+.hero { position: relative; display: flex; flex-direction: column; gap: 16px; }
 h1 { font-size: 60px; line-height: 1; letter-spacing: -1px; }
 .lead { margin: 0; font-size: 22px; line-height: 1.35; font-weight: 600; max-width: 320px; }
 .points { list-style: none; padding: 0; margin: 8px 0 0; display: flex; flex-direction: column; gap: 10px; }

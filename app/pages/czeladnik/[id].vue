@@ -66,7 +66,7 @@ async function invite() {
       </section>
 
       <template v-if="isMaster && inviting && !sent">
-        <label class="field">Wiadomość (opcjonalnie) <textarea v-model="message" maxlength="1000" /></label>
+        <label class="field">Wiadomość (opcjonalnie) <textarea v-model="message" maxlength="1000" placeholder="np. Dzień dobry, szukam ucznia do warsztatu. Zapraszam na rozmowę." /></label>
         <p v-if="error" class="error">{{ error }}</p>
       </template>
     </div>

@@ -103,7 +103,7 @@ async function sendReview() {
           <div class="chips">
             <button v-for="n in 5" :key="n" type="button" class="chip" :class="{ on: review.stars === n }" @click="review.stars = n">{{ n }}★</button>
           </div>
-          <label class="field">Komentarz <textarea v-model="review.text" maxlength="1000" /></label>
+          <label class="field">Komentarz <textarea v-model="review.text" maxlength="1000" placeholder="Jak wyglądała nauka u tego mistrza?" /></label>
           <p v-if="reviewError" class="error">{{ reviewError }}</p>
           <button class="btn">Dodaj opinię</button>
         </form>

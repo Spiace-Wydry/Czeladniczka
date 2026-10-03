@@ -52,31 +52,33 @@ async function save() {
     </header>
     <form class="page-body" @submit.prevent="save">
 
-      <label class="field">Imię i nazwisko <input v-model="form.full_name" required minlength="2" maxlength="80"></label>
+      <label class="field">Imię i nazwisko <input v-model="form.full_name" required minlength="2" maxlength="80" placeholder="np. Jan Kowalski"></label>
       <label class="field">Miejscowość
         <select v-model="form.city_id" required>
+          <option :value="null" disabled>Wybierz miejscowość</option>
           <option v-for="c in cities" :key="c.id" :value="c.id">{{ c.name }}</option>
         </select>
       </label>
       <label class="field">{{ isMaster ? 'Rzemiosło' : 'Szukam mistrza w rzemiośle' }}
         <select v-model="form.craft_id" required>
+          <option :value="null" disabled>Wybierz rzemiosło</option>
           <option v-for="c in crafts" :key="c.id" :value="c.id">{{ c.label }}</option>
         </select>
       </label>
-      <label class="field">O mnie <textarea v-model="form.bio" maxlength="2000" /></label>
+      <label class="field">O mnie <textarea v-model="form.bio" maxlength="2000" placeholder="Napisz kilka zdań o sobie — doświadczenie, czym się zajmujesz, czego szukasz." /></label>
       <label class="field">{{ isMaster ? 'Czego nauczę (oddziel przecinkami)' : 'Co już potrafię (oddziel przecinkami)' }}
-        <input v-model="form.skills">
+        <input v-model="form.skills" :placeholder="isMaster ? 'np. Obróbka drewna, Renowacja mebli' : 'np. Wkrętarka i szlifierka, Proste projekty'">
       </label>
 
       <template v-if="isMaster">
         <label class="field">Tytuł <input v-model="form.title" placeholder="np. Mistrz stolarski" maxlength="80"></label>
         <div class="two">
-          <label class="field">Lat w zawodzie <input v-model.number="form.years_in_trade" type="number" min="0" max="80"></label>
-          <label class="field">Wyszkolonych <input v-model.number="form.trained_count" type="number" min="0" max="1000"></label>
+          <label class="field">Lat w zawodzie <input v-model.number="form.years_in_trade" type="number" min="0" max="80" placeholder="np. 15"></label>
+          <label class="field">Wyszkolonych <input v-model.number="form.trained_count" type="number" min="0" max="1000" placeholder="np. 5"></label>
         </div>
         <label class="field">Czas praktyki <input v-model="form.duration" placeholder="np. 3–6 miesięcy" maxlength="80"></label>
         <label class="field">Grafik <input v-model="form.schedule" placeholder="np. pn–pt, 8:00–14:00" maxlength="80"></label>
-        <label class="field">Na koniec <input v-model="form.ends_with" maxlength="80"></label>
+        <label class="field">Na koniec <input v-model="form.ends_with" maxlength="80" placeholder="np. Egzamin czeladniczy"></label>
         <div class="checks">
           <label class="check"><input v-model="form.accepting" type="checkbox"> Przyjmuję uczniów</label>
           <label class="check"><input v-model="form.paid" type="checkbox"> Płatna praktyka</label>
@@ -86,8 +88,8 @@ async function save() {
 
       <template v-else>
         <div class="two">
-          <label class="field">Wiek <input v-model.number="form.age" type="number" min="14" max="99"></label>
-          <label class="field">Dojazd do (km) <input v-model.number="form.max_distance_km" type="number" min="1" max="500"></label>
+          <label class="field">Wiek <input v-model.number="form.age" type="number" min="14" max="99" placeholder="np. 19"></label>
+          <label class="field">Dojazd do (km) <input v-model.number="form.max_distance_km" type="number" min="1" max="500" placeholder="np. 20"></label>
         </div>
         <label class="field">Forma nauki <input v-model="form.learning_form" placeholder="np. Praktyka w warsztacie" maxlength="80"></label>
         <label class="field">Dostępność <input v-model="form.availability" placeholder="np. pn–pt, od zaraz" maxlength="80"></label>
