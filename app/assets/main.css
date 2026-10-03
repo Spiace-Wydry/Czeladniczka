@@ -41,6 +41,8 @@ h1, h2, h3, .h1 { font-family: 'Zilla Slab', Georgia, serif; font-weight: 700; m
 .bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; z-index: 10;
   padding: 14px 20px calc(22px + env(safe-area-inset-bottom)); background: var(--cream); border-top: 1px solid var(--line); display: flex; gap: 10px; }
 .bar.plain { border-top: 0; }
+.bar .done { flex: 1; margin: 0; min-height: 56px; display: flex; align-items: center; justify-content: center; border-radius: 28px;
+  background: var(--sage); color: var(--moss-ink); font-weight: 800; font-size: 16px; text-align: center; }
 
 /* Cards, divided table */
 .card { background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 14px; text-decoration: none; color: var(--brown); }
@@ -65,6 +67,9 @@ h1, h2, h3, .h1 { font-family: 'Zilla Slab', Georgia, serif; font-weight: 700; m
 .field input, .field select, .field textarea { font: 500 15px Manrope, sans-serif; color: var(--brown); background: #fff;
   border: 1.5px solid var(--sand); border-radius: 18px; padding: 14px 16px; min-height: 52px; width: 100%; }
 .field textarea { min-height: 112px; resize: vertical; }
+/* Own chevron so it sits further in from the edge than the native arrow */
+.field select { appearance: none; padding-right: 56px; background: #fff no-repeat right 30px center / 14px
+  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233B2716' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); }
 .check { display: flex; gap: 12px; align-items: center; padding: 14px 16px; border-radius: 18px; background: var(--sage);
   color: var(--moss-ink); font-weight: 700; font-size: 14px; min-height: 44px; cursor: pointer; }
 .check input { width: 22px; height: 22px; margin: 0; flex: none; accent-color: var(--moss); }

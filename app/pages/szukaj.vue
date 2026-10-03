@@ -15,7 +15,16 @@ const { data: crafts } = await useAsyncData('crafts', async () =>
 
 const { data: results, pending } = await useAsyncData('search', async () => {
   const common = { q: q.value.trim() || undefined, p_craft_id: craftId.value ?? undefined, max_km: near.value ? 20 : undefined }
-  if (isMaster.value) return { apprentices: (await supabase.rpc('search_apprentices', common)).data ?? [], masters: [] }
+  if (isMaster.value) {
+    const [{ data: apprentices }, { data: reqs }] = await Promise.all([
+      supabase.rpc('search_apprentices', common),
+      supabase.from('requests').select('apprentice_id, kind, status').eq('master_id', me.value!.id).in('status', ['pending', 'accepted']),
+    ])
+    // One open/accepted request per pair at most matters for the card label
+    const label = Object.fromEntries((reqs ?? []).map((r) => [r.apprentice_id,
+      r.status === 'accepted' ? 'Przyjęty' : r.kind === 'invite' ? 'Zaproszony' : 'Wysłał zgłoszenie']))
+    return { apprentices: (apprentices ?? []).map((a) => ({ ...a, status: label[a.id] as string | undefined })), masters: [] }
+  }
   return {
     masters: (await supabase.rpc('search_masters', { ...common, p_paid: paid.value, p_available_now: now.value })).data ?? [],
     apprentices: [],
@@ -81,7 +90,10 @@ const pickCraft = (id: number) => (craftId.value = craftId.value === id ? null :
           <span class="body">
             <span class="name">{{ a.full_name }}</span>
             <span class="meta">{{ a.age ? `${a.age} lat · ` : '' }}{{ a.city_name }}<template v-if="a.distance_km != null">, {{ a.distance_km }} km</template></span>
-            <span v-if="a.craft_label" class="tags"><span class="tag yellow">Szuka: {{ a.craft_label.toLowerCase() }}</span></span>
+            <span v-if="a.craft_label || a.status" class="tags">
+              <span v-if="a.status" class="tag">{{ a.status }}</span>
+              <span v-if="a.craft_label" class="tag yellow">Szuka: {{ a.craft_label.toLowerCase() }}</span>
+            </span>
           </span>
         </NuxtLink>
         <p v-if="!results?.apprentices.length" class="muted">Brak czeladników dla tych filtrów.</p>

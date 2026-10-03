@@ -21,13 +21,18 @@ const rating = computed(() => {
 // Apprentice-only state: saved + review eligibility
 const saved = ref(false)
 const canReview = ref(false)
+// Latest request between us: pending/accepted replaces "Poproś o naukę" with its status
+const rel = ref<{ kind: string; status: string } | null>(null)
 if (isApprentice.value) {
-  const [{ data: s }, { data: acc }] = await Promise.all([
+  const [{ data: s }, { data: acc }, { data: last }] = await Promise.all([
     supabase.from('saved_masters').select('master_id').eq('apprentice_id', me.value!.id).eq('master_id', id).maybeSingle(),
     supabase.from('requests').select('id').eq('apprentice_id', me.value!.id).eq('master_id', id).eq('status', 'accepted').limit(1),
+    supabase.from('requests').select('kind, status').eq('apprentice_id', me.value!.id).eq('master_id', id)
+      .order('created_at', { ascending: false }).limit(1).maybeSingle(),
   ])
   saved.value = !!s
   canReview.value = !!acc?.length
+  rel.value = last
 }
 const reviewed = computed(() => reviews.value?.some((r) => r.apprentice_id === me.value?.id))
 
@@ -116,7 +121,9 @@ async function sendReview() {
     </div>
 
     <div v-if="isApprentice && m.accepting" class="bar">
-      <NuxtLink :to="`/mistrz/${id}/zgloszenie`" class="btn btn-yellow">Poproś o naukę</NuxtLink>
+      <NuxtLink v-if="rel?.status === 'pending' && rel.kind === 'invite'" to="/zgloszenia" class="btn btn-yellow">Odpowiedz na zaproszenie</NuxtLink>
+      <p v-else-if="rel && rel.status !== 'declined'" class="done">{{ rel.status === 'accepted' ? 'Zgłoszenie przyjęte' : 'Zgłoszenie wysłane · czeka na odpowiedź' }}</p>
+      <NuxtLink v-else :to="`/mistrz/${id}/zgloszenie`" class="btn btn-yellow">Poproś o naukę</NuxtLink>
     </div>
   </main>
 </template>

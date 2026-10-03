@@ -9,9 +9,15 @@ const { data: a } = await useAsyncData(`apprentice-${id}`, async () =>
   (await supabase.from('profiles').select('*, crafts(label), cities(name)').eq('id', id).eq('role', 'apprentice').maybeSingle()).data)
 if (!a.value) throw createError({ statusCode: 404, fatal: true })
 
+// Latest request between us: a pending or accepted one blocks another invite; a declined one allows it
+const { data: rel, refresh: refreshRel } = await useAsyncData(`rel-${id}`, async () => isMaster.value
+  ? (await supabase.from('requests').select('kind, status').eq('apprentice_id', id).eq('master_id', me.value!.id)
+      .order('created_at', { ascending: false }).limit(1).maybeSingle()).data
+  : null)
+const blocked = computed(() => !!rel.value && rel.value.status !== 'declined')
+
 const inviting = ref(false)
 const message = ref('')
-const sent = ref(false)
 const error = ref('')
 
 async function invite() {
@@ -19,7 +25,7 @@ async function invite() {
   const { error: e } = await supabase.from('requests')
     .insert({ apprentice_id: id, master_id: me.value!.id, kind: 'invite', motivation: message.value || null })
   if (e) error.value = e.code === '23505' ? 'Masz już oczekujące zgłoszenie z tą osobą.' : 'Nie udało się wysłać zaproszenia.'
-  else sent.value = true
+  else { inviting.value = false; await refreshRel() }
 }
 </script>
 
@@ -65,14 +71,15 @@ async function invite() {
         <div class="chips"><span v-for="s in a.skills" :key="s" class="dchip">{{ s }}</span></div>
       </section>
 
-      <template v-if="isMaster && inviting && !sent">
+      <template v-if="isMaster && inviting && !blocked">
         <label class="field">Wiadomość (opcjonalnie) <textarea v-model="message" maxlength="1000" placeholder="np. Dzień dobry, szukam ucznia do warsztatu. Zapraszam na rozmowę." /></label>
         <p v-if="error" class="error">{{ error }}</p>
       </template>
     </div>
 
     <div v-if="isMaster" class="bar">
-      <p v-if="sent" class="done">Zaproszenie wysłane</p>
+      <NuxtLink v-if="rel?.status === 'pending' && rel.kind === 'application'" to="/zgloszenia" class="btn btn-yellow">Odpowiedz na zgłoszenie</NuxtLink>
+      <p v-else-if="blocked" class="done">{{ rel?.status === 'accepted' ? 'Zgłoszenie przyjęte' : 'Zaproszenie wysłane · czeka na odpowiedź' }}</p>
       <button v-else-if="inviting" class="btn btn-yellow" @click="invite">Wyślij zaproszenie</button>
       <button v-else class="btn btn-yellow" @click="inviting = true">Zaproś do warsztatu</button>
     </div>
@@ -93,6 +100,4 @@ async function invite() {
 .sec:first-child { gap: 8px; }
 .table > div { padding: 12px 16px; }
 .text { margin: 0; font-size: 15px; line-height: 1.55; }
-.done { flex: 1; margin: 0; min-height: 56px; display: flex; align-items: center; justify-content: center; border-radius: 28px;
-  background: var(--sage); color: var(--moss-ink); font-weight: 800; font-size: 16px; }
 </style>

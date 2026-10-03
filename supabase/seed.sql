@@ -72,3 +72,49 @@ insert into requests (apprentice_id, master_id, kind, level, start, motivation, 
 insert into reviews (apprentice_id, master_id, stars, text) values
   ('b0000000-0000-0000-0000-000000000002', 'a0000000-0000-0000-0000-000000000002', 5,
    'Pani Maria cierpliwie pokazała mi wszystko od sprężyn po obicie. Polecam!');
+
+-- Henryk's former students: accepted requests + reviews, so his profile has a rating
+insert into auth.users (instance_id, id, aud, role, email, encrypted_password, email_confirmed_at,
+  raw_app_meta_data, raw_user_meta_data, created_at, updated_at,
+  confirmation_token, recovery_token, email_change_token_new, email_change)
+select '00000000-0000-0000-0000-000000000000', u.id, 'authenticated', 'authenticated', u.email,
+  extensions.crypt('password123', extensions.gen_salt('bf')), now(),
+  '{"provider":"email","providers":["email"]}',
+  jsonb_build_object('role', 'apprentice', 'full_name', u.full_name, 'city_id', (select id from cities where name = u.city)),
+  now(), now(), '', '', '', ''
+from (values
+  ('b0000000-0000-0000-0000-000000000004'::uuid, 'tomasz@example.com',     'Tomasz Wrona',       'Sochaczew'),
+  ('b0000000-0000-0000-0000-000000000005'::uuid, 'aleksandra@example.com', 'Aleksandra Pietrzak', 'Łowicz'),
+  ('b0000000-0000-0000-0000-000000000006'::uuid, 'bartosz@example.com',    'Bartosz Kulesza',    'Błonie')
+) as u(id, email, full_name, city);
+
+insert into auth.identities (id, user_id, provider_id, identity_data, provider, last_sign_in_at, created_at, updated_at)
+select gen_random_uuid(), id, id::text, jsonb_build_object('sub', id::text, 'email', email), 'email', now(), now(), now()
+from auth.users where id in ('b0000000-0000-0000-0000-000000000004', 'b0000000-0000-0000-0000-000000000005', 'b0000000-0000-0000-0000-000000000006');
+
+update profiles p set craft_id = (select id from crafts where slug = 'stolarstwo'), age = v.age, goal = v.goal, bio = v.bio
+from (values
+  ('b0000000-0000-0000-0000-000000000004'::uuid, 24, 'Egzamin czeladniczy', 'Zdałem egzamin czeladniczy po praktyce u pana Henryka. Dziś pracuję w zakładzie meblarskim.'),
+  ('b0000000-0000-0000-0000-000000000005'::uuid, 22, 'Renowacja mebli', 'Odnawiam stare meble. Podstaw stolarki uczyłam się w warsztacie w Sochaczewie.'),
+  ('b0000000-0000-0000-0000-000000000006'::uuid, 27, 'Własny warsztat', 'Po latach w biurze przekwalifikowałem się na stolarza.')
+) as v(id, age, goal, bio)
+where p.id = v.id;
+
+insert into requests (apprentice_id, master_id, kind, level, start, motivation, exam_prep, status, created_at) values
+  ('b0000000-0000-0000-0000-000000000004', 'a0000000-0000-0000-0000-000000000001', 'application', 'szkola', 'zaraz',
+   'Chcę zdać egzamin czeladniczy ze stolarstwa.', true, 'accepted', now() - interval '14 months'),
+  ('b0000000-0000-0000-0000-000000000005', 'a0000000-0000-0000-0000-000000000001', 'application', 'hobby', 'wakacje',
+   'Chcę nauczyć się renowacji mebli.', false, 'accepted', now() - interval '10 months'),
+  ('b0000000-0000-0000-0000-000000000006', 'a0000000-0000-0000-0000-000000000001', 'invite', null, null,
+   'Zapraszam na praktykę w warsztacie.', false, 'accepted', now() - interval '6 months');
+
+insert into reviews (apprentice_id, master_id, stars, text, created_at) values
+  ('b0000000-0000-0000-0000-000000000004', 'a0000000-0000-0000-0000-000000000001', 5,
+   'Pan Henryk to prawdziwy fachowiec. Nauczył mnie połączeń ciesielskich od podstaw i przygotował do egzaminu — zdałem za pierwszym razem.',
+   now() - interval '8 months'),
+  ('b0000000-0000-0000-0000-000000000005', 'a0000000-0000-0000-0000-000000000001', 5,
+   'Cierpliwy i wymagający. Po kilku miesiącach sama odnowiłam komodę po babci. Polecam każdemu, kto chce się nauczyć porządnej roboty.',
+   now() - interval '5 months'),
+  ('b0000000-0000-0000-0000-000000000006', 'a0000000-0000-0000-0000-000000000001', 4,
+   'Świetny warsztat i dużo praktyki. Czasem brakowało czasu na pytania, ale nauczyłem się więcej niż na kursie.',
+   now() - interval '2 months');
