@@ -20,7 +20,9 @@ h1, h2, h3, .h1, .h2 { font-family: 'Zilla Slab', Georgia, serif; font-weight: 7
 .btn:disabled { opacity: .5; cursor: default; }
 .btn-yellow { background: var(--yellow); color: var(--brown); } .btn-yellow:hover { color: var(--brown); }
 .btn-outline { background: transparent; color: var(--brown); border: 1.5px solid var(--brown); } .btn-outline:hover { color: var(--brown); }
-.card { display: block; background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 16px; text-decoration: none; }
+.card { background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 16px; text-decoration: none; }
+a.card { display: block; }
+a.card.row { display: flex; }
 .chip { min-height: 44px; padding: 0 16px; border-radius: 22px; font: 700 14px Manrope, sans-serif; cursor: pointer;
   background: #fff; color: var(--brown); border: 1.5px solid #CDB27A; }
 .chip.on { background: var(--brown); color: var(--cream); border-color: var(--brown); }
