@@ -16,9 +16,9 @@ const { data: masters } = await useAsyncData('saved', async () => {
 </script>
 
 <template>
-  <main class="screen">
-    <h1 class="h1">Zapisane</h1>
-    <div class="stack list">
+  <main class="page">
+    <header class="ycap"><h1 class="h1">Zapisane</h1></header>
+    <div class="page-body list">
       <MasterCard v-for="m in masters" :key="m.id" :m="m" />
       <p v-if="!masters?.length" class="muted">Nie masz jeszcze zapisanych mistrzów. Użyj zakładki na profilu mistrza.</p>
     </div>
@@ -26,5 +26,5 @@ const { data: masters } = await useAsyncData('saved', async () => {
 </template>
 
 <style scoped>
-.list { margin-top: 16px; }
+.list { gap: 14px; }
 </style>

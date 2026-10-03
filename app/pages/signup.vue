@@ -34,15 +34,22 @@ async function submit() {
 </script>
 
 <template>
-  <main class="screen">
-    <form class="stack" @submit.prevent="submit">
-      <h1 class="h1">{{ role === 'master' ? 'Konto mistrza' : 'Konto czeladnika' }}</h1>
-      <p class="muted">
-        {{ role === 'master' ? 'Znajdź ucznia do swojego warsztatu.' : 'Znajdź mistrza, który nauczy Cię fachu.' }}
-        <NuxtLink :to="`/signup?role=${role === 'master' ? 'apprentice' : 'master'}`">
-          {{ role === 'master' ? 'Szukam mistrza' : 'Jestem mistrzem' }}
-        </NuxtLink>
-      </p>
+  <main class="page">
+    <header class="ycap">
+      <NuxtLink to="/" class="round" aria-label="Wróć">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3B2716" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
+      </NuxtLink>
+      <div class="titles">
+        <h1 class="h1">{{ role === 'master' ? 'Konto mistrza' : 'Konto czeladnika' }}</h1>
+        <p class="lead">
+          {{ role === 'master' ? 'Znajdź ucznia do swojego warsztatu.' : 'Znajdź mistrza, który nauczy Cię fachu.' }}
+          <NuxtLink :to="`/signup?role=${role === 'master' ? 'apprentice' : 'master'}`">
+            {{ role === 'master' ? 'Szukam mistrza' : 'Jestem mistrzem' }}
+          </NuxtLink>
+        </p>
+      </div>
+    </header>
+    <form class="page-body" @submit.prevent="submit">
       <label class="field">Imię i nazwisko <input v-model="form.full_name" required minlength="2" maxlength="80" autocomplete="name"></label>
       <label class="field">Miejscowość
         <select v-model="form.city_id" required>
@@ -55,7 +62,15 @@ async function submit() {
       <p v-if="error" class="error">{{ error }}</p>
       <p v-if="info" class="tag">{{ info }}</p>
       <button class="btn" :disabled="busy">Załóż konto</button>
-      <p>Masz już konto? <NuxtLink to="/login"><b>Zaloguj się</b></NuxtLink></p>
+      <p class="alt">Masz już konto? <NuxtLink to="/login">Zaloguj się</NuxtLink></p>
     </form>
   </main>
 </template>
+
+<style scoped>
+.titles { display: flex; flex-direction: column; gap: 6px; }
+.lead { margin: 0; font-size: 14px; font-weight: 600; }
+.lead a { font-weight: 800; }
+.alt { margin: 0; text-align: center; font-size: 14px; }
+.alt a { font-weight: 700; }
+</style>

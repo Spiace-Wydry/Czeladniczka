@@ -30,42 +30,51 @@ async function answer(id: number, status: 'accepted' | 'declined') {
 </script>
 
 <template>
-  <main class="screen">
-    <h1 class="h1">Zgłoszenia</h1>
-    <p v-if="error" class="error">{{ error }}</p>
+  <main class="page">
+    <header class="ycap"><h1 class="h1">Zgłoszenia</h1></header>
+    <div class="page-body">
+      <p v-if="error" class="error">{{ error }}</p>
 
-    <template v-for="group in [{ title: 'Otrzymane', list: received }, { title: 'Wysłane', list: sent }]" :key="group.title">
-      <h2 class="section-title">{{ group.title }}</h2>
-      <div class="stack">
-        <div v-for="r in group.list" :key="r.id" class="card stack tight">
-          <div class="row between">
-            <NuxtLink :to="otherLink(r)" class="row who">
-              <Avatar :name="other(r)?.full_name ?? '?'" :size="40" />
-              <b>{{ other(r)?.full_name }}</b>
+      <section v-for="group in [{ title: 'Otrzymane', list: received }, { title: 'Wysłane', list: sent }]" :key="group.title" class="sec">
+        <h2 class="section-title">{{ group.title }}</h2>
+        <div v-for="r in group.list" :key="r.id" class="card req">
+          <div class="req-top">
+            <NuxtLink :to="otherLink(r)" class="who">
+              <Avatar :name="other(r)?.full_name ?? '?'" :size="48" :tone="isMaster ? 'moss' : 'walnut'" />
+              <span class="who-text">
+                <b>{{ other(r)?.full_name }}</b>
+                <span class="muted">{{ r.kind === 'invite' ? 'Zaproszenie do warsztatu' : 'Prośba o naukę' }} · {{ new Date(r.created_at).toLocaleDateString('pl-PL') }}</span>
+              </span>
             </NuxtLink>
-            <span class="tag" :class="{ yellow: r.status === 'pending' }">{{ STATUS[r.status] }}</span>
+            <span class="tag" :class="{ yellow: r.status === 'pending', no: r.status === 'declined' }">{{ STATUS[r.status] }}</span>
           </div>
-          <span class="muted">
-            {{ r.kind === 'invite' ? 'Zaproszenie do warsztatu' : 'Prośba o naukę' }} · {{ new Date(r.created_at).toLocaleDateString('pl-PL') }}
-          </span>
-          <span v-if="r.kind === 'application'" class="muted">
-            {{ r.level ? LEVEL[r.level] : '' }} · {{ r.start ? START[r.start] : '' }}<template v-if="r.exam_prep"> · egzamin czeladniczy</template>
-          </span>
+          <div v-if="r.kind === 'application'" class="chips">
+            <span v-if="r.level" class="dchip">{{ LEVEL[r.level] }}</span>
+            <span v-if="r.start" class="dchip">{{ START[r.start] }}</span>
+            <span v-if="r.exam_prep" class="dchip">Egzamin czeladniczy</span>
+          </div>
           <p v-if="r.motivation" class="text">{{ r.motivation }}</p>
-          <div v-if="isReceived(r) && r.status === 'pending'" class="row">
+          <div v-if="isReceived(r) && r.status === 'pending'" class="actions">
             <button class="btn" @click="answer(r.id, 'accepted')">Przyjmij</button>
             <button class="btn btn-outline" @click="answer(r.id, 'declined')">Odrzuć</button>
           </div>
         </div>
         <p v-if="!group.list.length" class="muted">Brak.</p>
-      </div>
-    </template>
+      </section>
+    </div>
   </main>
 </template>
 
 <style scoped>
-.between { justify-content: space-between; }
-.tight { gap: 6px; }
-.who { text-decoration: none; gap: 10px; }
-.text { margin: 0; }
+.sec { display: flex; flex-direction: column; gap: 10px; }
+.req { display: flex; flex-direction: column; gap: 12px; }
+.req-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+.who { display: flex; align-items: center; gap: 12px; min-width: 0; text-decoration: none; }
+.who-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.who-text b { font-weight: 800; font-size: 16px; }
+.who-text .muted { font-size: 13px; }
+.tag { flex: none; }
+.tag.no { background: var(--line-soft); color: var(--soft); }
+.text { margin: 0; font-size: 15px; line-height: 1.55; }
+.actions { display: flex; gap: 10px; }
 </style>

@@ -7,19 +7,16 @@
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--cream); color: var(--brown); font: 500 15px/normal Manrope, system-ui, sans-serif; }
 a { color: var(--brown); } a:hover { color: var(--walnut); }
-h1, h2, h3, .h1, .h2 { font-family: 'Zilla Slab', Georgia, serif; font-weight: 700; margin: 0; }
+h1, h2, h3, .h1 { font-family: 'Zilla Slab', Georgia, serif; font-weight: 700; margin: 0; }
 .h1 { font-size: 30px; line-height: 1.1; }
-.h2 { font-size: 22px; }
 .section-title { font-family: 'Zilla Slab', Georgia, serif; font-weight: 700; font-size: 20px; margin: 0; }
 .muted { color: var(--soft); font-size: 14px; font-weight: 600; }
 
-/* Layout: a centred column; .page has no padding (full-bleed header), .screen is the padded variant */
-.page, .screen { max-width: 480px; margin: 0 auto; min-height: 100dvh; padding-bottom: calc(104px + env(safe-area-inset-bottom)); }
-.screen { padding: 24px 20px calc(104px + env(safe-area-inset-bottom)); }
+/* Layout: a centred column; header is full column width, .page-body is padded */
+.page { max-width: 480px; margin: 0 auto; min-height: 100dvh; padding-bottom: calc(104px + env(safe-area-inset-bottom)); }
 .page-body { padding: 22px 20px 0; display: flex; flex-direction: column; gap: 18px; }
 .page.has-bar { padding-bottom: calc(112px + env(safe-area-inset-bottom)); }
 .stack { display: grid; gap: 12px; }
-.row { display: flex; gap: 12px; align-items: center; }
 
 /* Yellow rounded header (Szukaj, undesigned pages; .pale = Czeladnik) */
 .ycap { background: var(--yellow); padding: 40px 20px 28px; border-radius: 0 0 32px 32px; display: flex; flex-direction: column; gap: 18px; }
@@ -47,8 +44,6 @@ h1, h2, h3, .h1, .h2 { font-family: 'Zilla Slab', Georgia, serif; font-weight: 7
 
 /* Cards, divided table */
 .card { background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 14px; text-decoration: none; color: var(--brown); }
-a.card { display: block; }
-a.card.row { display: flex; }
 .table { display: flex; flex-direction: column; border-radius: 20px; background: #fff; border: 1px solid var(--line); margin: 0; }
 .table > div { display: flex; justify-content: space-between; gap: 12px; padding: 13px 16px; font-size: 14px; border-bottom: 1px solid var(--line-soft); }
 .table > div:last-child { border-bottom: 0; }

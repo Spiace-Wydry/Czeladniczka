@@ -40,10 +40,17 @@ async function save() {
 </script>
 
 <template>
-  <main class="screen">
-    <form class="stack" @submit.prevent="save">
-      <h1 class="h1">Mój profil</h1>
-      <NuxtLink :to="isMaster ? `/mistrz/${p.id}` : `/czeladnik/${p.id}`">Zobacz, jak widzą Cię inni →</NuxtLink>
+  <main class="page">
+    <header class="ycap">
+      <div class="hello">
+        <Avatar :name="p.full_name" :size="64" :tone="isMaster ? 'walnut' : 'moss'" />
+        <div class="titles">
+          <h1 class="h1">Mój profil</h1>
+          <NuxtLink :to="isMaster ? `/mistrz/${p.id}` : `/czeladnik/${p.id}`" class="see">Zobacz, jak widzą Cię inni →</NuxtLink>
+        </div>
+      </div>
+    </header>
+    <form class="page-body" @submit.prevent="save">
 
       <label class="field">Imię i nazwisko <input v-model="form.full_name" required minlength="2" maxlength="80"></label>
       <label class="field">Miejscowość
@@ -70,9 +77,11 @@ async function save() {
         <label class="field">Czas praktyki <input v-model="form.duration" placeholder="np. 3–6 miesięcy" maxlength="80"></label>
         <label class="field">Grafik <input v-model="form.schedule" placeholder="np. pn–pt, 8:00–14:00" maxlength="80"></label>
         <label class="field">Na koniec <input v-model="form.ends_with" maxlength="80"></label>
-        <label class="check"><input v-model="form.accepting" type="checkbox"> Przyjmuję uczniów</label>
-        <label class="check"><input v-model="form.paid" type="checkbox"> Płatna praktyka</label>
-        <label class="check"><input v-model="form.available_now" type="checkbox"> Od zaraz</label>
+        <div class="checks">
+          <label class="check"><input v-model="form.accepting" type="checkbox"> Przyjmuję uczniów</label>
+          <label class="check"><input v-model="form.paid" type="checkbox"> Płatna praktyka</label>
+          <label class="check"><input v-model="form.available_now" type="checkbox"> Od zaraz</label>
+        </div>
       </template>
 
       <template v-else>
@@ -93,5 +102,9 @@ async function save() {
 </template>
 
 <style scoped>
-.two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.hello { display: flex; align-items: center; gap: 16px; }
+.titles { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.see { font-size: 14px; font-weight: 700; display: inline-flex; align-items: center; min-height: 44px; margin: -10px 0; }
+.two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+.checks { display: flex; flex-direction: column; gap: 10px; }
 </style>
