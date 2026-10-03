@@ -118,3 +118,8 @@ insert into reviews (apprentice_id, master_id, stars, text, created_at) values
   ('b0000000-0000-0000-0000-000000000006', 'a0000000-0000-0000-0000-000000000001', 4,
    'Świetny warsztat i dużo praktyki. Czasem brakowało czasu na pytania, ale nauczyłem się więcej niż na kursie.',
    now() - interval '2 months');
+
+-- Apprentice preferences used by the masters' "Płatna praktyka" / "Od zaraz" filters
+update profiles set available_now = true, paid = false where id = 'b0000000-0000-0000-0000-000000000001'; -- Kacper: od zaraz
+update profiles set available_now = false, paid = false where id = 'b0000000-0000-0000-0000-000000000002'; -- Julia: weekendy
+update profiles set available_now = false, paid = true where id = 'b0000000-0000-0000-0000-000000000003';  -- Oskar: od wakacji, pełny etat

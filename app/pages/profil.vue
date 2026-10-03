@@ -94,6 +94,8 @@ async function save() {
         <label class="field">Forma nauki <input v-model="form.learning_form" placeholder="np. Praktyka w warsztacie" maxlength="80"></label>
         <label class="field">Dostępność <input v-model="form.availability" placeholder="np. pn–pt, od zaraz" maxlength="80"></label>
         <label class="field">Cel <input v-model="form.goal" placeholder="np. Egzamin czeladniczy" maxlength="80"></label>
+        <label class="check"><input v-model="form.paid" type="checkbox"> Szukam płatnej praktyki</label>
+        <label class="check"><input v-model="form.available_now" type="checkbox"> Mogę zacząć od zaraz</label>
       </template>
 
       <p v-if="status" :class="status === 'Zapisano.' ? 'tag' : 'error'">{{ status }}</p>

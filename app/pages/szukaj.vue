@@ -6,7 +6,7 @@ const firstName = computed(() => me.value?.full_name.split(' ')[0])
 
 const q = ref('')
 const craftId = ref<number | null>(null)
-const near = ref(false)
+const near = ref(true)
 const paid = ref(false)
 const now = ref(false)
 
@@ -14,7 +14,8 @@ const { data: crafts } = await useAsyncData('crafts', async () =>
   (await supabase.from('crafts').select('*').order('id')).data ?? [])
 
 const { data: results, pending } = await useAsyncData('search', async () => {
-  const common = { q: q.value.trim() || undefined, p_craft_id: craftId.value ?? undefined, max_km: near.value ? 20 : undefined }
+  const common = { q: q.value.trim() || undefined, p_craft_id: craftId.value ?? undefined, max_km: near.value ? 20 : undefined,
+    p_paid: paid.value, p_available_now: now.value }
   if (isMaster.value) {
     const [{ data: apprentices }, { data: reqs }] = await Promise.all([
       supabase.rpc('search_apprentices', common),
@@ -26,7 +27,7 @@ const { data: results, pending } = await useAsyncData('search', async () => {
     return { apprentices: (apprentices ?? []).map((a) => ({ ...a, status: label[a.id] as string | undefined })), masters: [] }
   }
   return {
-    masters: (await supabase.rpc('search_masters', { ...common, p_paid: paid.value, p_available_now: now.value })).data ?? [],
+    masters: (await supabase.rpc('search_masters', common)).data ?? [],
     apprentices: [],
   }
 }, { watch: [q, craftId, near, paid, now] })
@@ -58,10 +59,8 @@ const pickCraft = (id: number) => (craftId.value = craftId.value === id ? null :
       </div>
       <div class="filters">
         <button class="fchip" :class="{ on: near }" @click="near = !near">Do 20 km</button>
-        <template v-if="!isMaster">
-          <button class="fchip" :class="{ on: paid }" @click="paid = !paid">Płatna praktyka</button>
-          <button class="fchip" :class="{ on: now }" @click="now = !now">Od zaraz</button>
-        </template>
+        <button class="fchip" :class="{ on: paid }" @click="paid = !paid">Płatna praktyka</button>
+        <button class="fchip" :class="{ on: now }" @click="now = !now">Od zaraz</button>
       </div>
     </header>
 

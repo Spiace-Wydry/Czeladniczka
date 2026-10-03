@@ -308,7 +308,13 @@ export type Database = {
         Returns: number
       }
       search_apprentices: {
-        Args: { max_km?: number; p_craft_id?: number; q?: string }
+        Args: {
+          max_km?: number
+          p_available_now?: boolean
+          p_craft_id?: number
+          p_paid?: boolean
+          q?: string
+        }
         Returns: {
           age: number
           availability: string
