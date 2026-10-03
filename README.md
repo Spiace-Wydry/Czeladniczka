@@ -18,6 +18,14 @@ Local Supabase ports are shifted in `supabase/config.toml` (API 54521, DB 54522,
 
 Demo accounts (password `password123`): masters `henryk@`, `maria@`, `zbigniew@`, `marek@`, `andrzej@`, `teresa@`; apprentices `kacper@`, `julia@`, `oskar@` — all `@example.com`.
 
+### Test on a phone (same Wi-Fi)
+
+Supabase auth needs a secure context, so plain `http://<lan-ip>:3000` won't log in. Use HTTPS with Supabase proxied same-origin (dev only):
+
+1. In `.env` set `SUPABASE_URL=https://<lan-ip>:3000/supabase` (find the IP with `ip -4 route get 1.1.1.1`).
+2. `npm run dev:lan`, then open `https://<lan-ip>:3000` on the phone and accept the self-signed certificate warning.
+3. Set `SUPABASE_URL` back to `http://127.0.0.1:54521` for normal `npm run dev`.
+
 After changing the schema: add a migration in `supabase/migrations/`, run `supabase db reset`, then `npm run db:types`.
 
 ## Deploy (later)

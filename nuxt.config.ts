@@ -7,6 +7,11 @@ export default defineNuxtConfig({
     redirect: false,
     types: '~/types/database.types.ts',
   },
+  // Phone testing over LAN (`npm run dev:lan`): the page must be HTTPS (secure context for
+  // Supabase auth), so Supabase is reached same-origin through this proxy, not over plain http.
+  $development: {
+    routeRules: { '/supabase/**': { proxy: 'http://127.0.0.1:54521/**' } },
+  },
   app: {
     head: {
       htmlAttrs: { lang: 'pl' },
