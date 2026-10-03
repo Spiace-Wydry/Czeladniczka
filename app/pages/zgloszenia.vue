@@ -76,5 +76,7 @@ async function answer(id: number, status: 'accepted' | 'declined') {
 .tag { flex: none; }
 .tag.no { background: var(--line-soft); color: var(--soft); }
 .text { margin: 0; font-size: 15px; line-height: 1.55; }
-.actions { display: flex; gap: 10px; }
+.actions { display: flex; gap: 8px; }
+/* Compact answer buttons, still a 44px touch target */
+.actions .btn { width: auto; min-height: 44px; padding: 0 20px; border-radius: 22px; font-size: 14px; }
 </style>
