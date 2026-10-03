@@ -30,8 +30,10 @@ After changing the schema: add a migration in `supabase/migrations/`, run `supab
 
 ## Deploy (later)
 
-1. Create a Supabase Cloud project, `supabase link --project-ref <ref>`, `supabase db push`.
-   Reference data (cities, crafts) comes from migrations, so `db push` is enough. Do NOT push `seed.sql` (demo users) to production.
-2. Enable email confirmation in the project's Auth settings.
+1. Create a Supabase Cloud project, `supabase link --project-ref <ref>`, then on the FIRST push only:
+   `supabase db push --include-seed`. Migrations create the schema and reference data (cities, crafts);
+   `seed.sql` adds the demo accounts (password `password123`) — this is a showcase deployment, so they're wanted.
+   Later pushes: plain `supabase db push` (the seed isn't idempotent; re-running it fails on existing users).
+2. In Auth → Sign In / Providers → Email, turn OFF "Confirm email" so sign-up logs straight in (the app handles both modes).
 3. Import the repo in Vercel and set `SUPABASE_URL` and `SUPABASE_KEY`.
 4. In Supabase Auth → URL Configuration set "Site URL" to the Vercel domain and add it (plus preview URLs if wanted) to "Redirect URLs".
