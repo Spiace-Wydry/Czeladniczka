@@ -27,47 +27,80 @@ async function send() {
 </script>
 
 <template>
-  <main v-if="m" class="screen">
-    <div v-if="sent" class="stack done">
-      <h1 class="h1">Zgłoszenie wysłane!</h1>
-      <p>Mistrz {{ m.full_name.split(' ')[0] }} dostał Twoją wiadomość. Damy Ci znać, gdy odpowie.</p>
-      <NuxtLink to="/szukaj" class="btn">Szukaj dalej</NuxtLink>
-      <NuxtLink to="/zgloszenia" class="btn btn-outline">Moje zgłoszenia</NuxtLink>
-    </div>
+  <main v-if="m && sent" class="sent">
+    <span class="sent-icon">
+      <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#3B2716" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10" /></svg>
+    </span>
+    <h1>Zgłoszenie wysłane!</h1>
+    <p>Mistrz {{ m.full_name.split(' ')[0] }} dostał Twoją wiadomość. Damy Ci znać, gdy odpowie.</p>
+    <NuxtLink to="/szukaj" class="btn btn-yellow">Szukaj dalej</NuxtLink>
+    <NuxtLink to="/zgloszenia" class="link">Moje zgłoszenia</NuxtLink>
+  </main>
 
-    <p v-else-if="!m.accepting" class="muted">Ten mistrz obecnie nie przyjmuje uczniów.</p>
-
-    <form v-else class="stack" @submit.prevent="send">
-      <button type="button" class="back" aria-label="Wróć" @click="$router.back()">←</button>
-      <h1 class="h1">Zgłoszenie do mistrza</h1>
-      <div class="card row">
-        <Avatar :name="m.full_name" />
-        <div><b>{{ m.full_name }}</b><div class="muted">{{ m.crafts?.label }} · praktyka {{ m.duration }}</div></div>
+  <main v-else-if="m" class="page" :class="{ 'has-bar': m.accepting }">
+    <form id="apply" class="form" @submit.prevent="send">
+      <div class="title">
+        <button type="button" class="round light" aria-label="Wróć" @click="$router.back()">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3B2716" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
+        </button>
+        <h1>Zgłoszenie do mistrza</h1>
       </div>
 
-      <h2 class="section-title">Twoje doświadczenie</h2>
-      <div class="chips">
-        <button v-for="l in levels" :key="l.id" type="button" class="chip" :class="{ on: form.level === l.id }" @click="form.level = l.id">{{ l.label }}</button>
+      <div class="who">
+        <Avatar :name="m.full_name" :size="48" />
+        <span class="who-text"><b>{{ m.full_name }}</b><span>{{ m.crafts?.label }}<template v-if="m.duration"> · praktyka {{ m.duration }}</template></span></span>
       </div>
 
-      <h2 class="section-title">Kiedy możesz zacząć?</h2>
-      <div class="chips">
-        <button v-for="s in starts" :key="s.id" type="button" class="chip" :class="{ on: form.start === s.id }" @click="form.start = s.id">{{ s.label }}</button>
-      </div>
+      <p v-if="!m.accepting" class="muted">Ten mistrz obecnie nie przyjmuje uczniów.</p>
 
-      <label class="field section-label">Dlaczego chcesz poznać ten fach?
-        <textarea v-model="form.motivation" required maxlength="1000" />
-      </label>
-      <label class="check"><input v-model="form.exam_prep" type="checkbox"> Chcę przygotować się do egzaminu czeladniczego</label>
+      <template v-else>
+        <fieldset>
+          <legend>Twoje doświadczenie</legend>
+          <div class="chips">
+            <button v-for="l in levels" :key="l.id" type="button" class="chip" :class="{ on: form.level === l.id }" :aria-pressed="form.level === l.id" @click="form.level = l.id">{{ l.label }}</button>
+          </div>
+        </fieldset>
 
-      <p v-if="error" class="error">{{ error }}</p>
-      <button class="btn btn-yellow" :disabled="busy">Wyślij zgłoszenie</button>
+        <fieldset>
+          <legend>Kiedy możesz zacząć?</legend>
+          <div class="chips">
+            <button v-for="s in starts" :key="s.id" type="button" class="chip" :class="{ on: form.start === s.id }" :aria-pressed="form.start === s.id" @click="form.start = s.id">{{ s.label }}</button>
+          </div>
+        </fieldset>
+
+        <label class="field">Dlaczego chcesz poznać ten fach?
+          <textarea v-model="form.motivation" rows="4" required maxlength="1000"
+            placeholder="Napisz kilka zdań o sobie i o tym, czego chcesz się nauczyć…" />
+        </label>
+        <label class="check"><input v-model="form.exam_prep" type="checkbox"> Chcę przygotować się do egzaminu czeladniczego</label>
+
+        <p v-if="error" class="error">{{ error }}</p>
+      </template>
     </form>
+
+    <div v-if="m.accepting" class="bar plain">
+      <button form="apply" class="btn" :disabled="busy">Wyślij zgłoszenie</button>
+    </div>
   </main>
 </template>
 
 <style scoped>
-.back { width: 44px; height: 44px; border-radius: 22px; border: 0; background: #fff; font-size: 20px; cursor: pointer; color: var(--brown); }
-.done { margin-top: 30vh; text-align: center; }
-.section-label { font: 700 21px 'Zilla Slab', Georgia, serif; margin-top: 12px; }
+.form { padding: 36px 20px 0; display: flex; flex-direction: column; gap: 18px; }
+.title { display: flex; align-items: center; gap: 12px; }
+.title h1 { font-size: 24px; }
+.who { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 18px; background: var(--yellow); }
+.who-text { display: flex; flex-direction: column; gap: 2px; }
+.who-text b { font-weight: 800; }
+.who-text span { font-size: 13px; font-weight: 600; }
+fieldset { border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+legend { font-weight: 800; font-size: 15px; margin-bottom: 10px; padding: 0; }
+.field textarea { resize: none; min-height: 0; }
+.sent { max-width: 480px; margin: 0 auto; min-height: 100dvh; padding: 0 28px 40px; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 18px; text-align: center; background: var(--moss); color: var(--cream); }
+.sent-icon { display: flex; width: 112px; height: 112px; border-radius: 50%; background: var(--yellow); align-items: center; justify-content: center; }
+.sent h1 { font-size: 34px; line-height: 1.1; }
+.sent p { margin: 0; font-size: 16px; line-height: 1.5; max-width: 300px; }
+.sent .btn { margin-top: 12px; width: auto; padding: 0 32px; }
+.link { display: flex; align-items: center; min-height: 44px; color: var(--cream); font-weight: 700; }
+.link:hover { color: var(--light); }
 </style>
