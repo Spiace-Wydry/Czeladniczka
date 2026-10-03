@@ -23,5 +23,7 @@ After changing the schema: add a migration in `supabase/migrations/`, run `supab
 ## Deploy (later)
 
 1. Create a Supabase Cloud project, `supabase link --project-ref <ref>`, `supabase db push`.
+   Reference data (cities, crafts) comes from migrations, so `db push` is enough. Do NOT push `seed.sql` (demo users) to production.
 2. Enable email confirmation in the project's Auth settings.
 3. Import the repo in Vercel and set `SUPABASE_URL` and `SUPABASE_KEY`.
+4. In Supabase Auth → URL Configuration set "Site URL" to the Vercel domain and add it (plus preview URLs if wanted) to "Redirect URLs".
