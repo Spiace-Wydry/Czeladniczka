@@ -5,7 +5,7 @@ const supabase = useSupabaseClient()
 const { me } = useMe()
 
 const { data: m } = await useAsyncData(`master-mini-${id}`, async () =>
-  (await supabase.from('profiles').select('full_name, duration, crafts(label)').eq('id', id).eq('role', 'master').maybeSingle()).data)
+  (await supabase.from('profiles').select('full_name, duration, accepting, crafts(label)').eq('id', id).eq('role', 'master').maybeSingle()).data)
 if (!m.value) throw createError({ statusCode: 404, fatal: true })
 
 const levels = [{ id: 'zero', label: 'Zaczynam od zera' }, { id: 'hobby', label: 'Hobbystycznie' }, { id: 'szkola', label: 'Szkoła zawodowa' }]
@@ -34,6 +34,8 @@ async function send() {
       <NuxtLink to="/szukaj" class="btn">Szukaj dalej</NuxtLink>
       <NuxtLink to="/zgloszenia" class="btn btn-outline">Moje zgłoszenia</NuxtLink>
     </div>
+
+    <p v-else-if="!m.accepting" class="muted">Ten mistrz obecnie nie przyjmuje uczniów.</p>
 
     <form v-else class="stack" @submit.prevent="send">
       <button type="button" class="back" aria-label="Wróć" @click="$router.back()">←</button>

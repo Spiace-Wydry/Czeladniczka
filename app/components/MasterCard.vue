@@ -15,7 +15,7 @@ defineProps<{ m: MasterCardData }>()
     <div class="body">
       <div class="top">
         <b>{{ m.full_name }}</b>
-        <span v-if="m.rating_avg" class="rating">★ {{ String(m.rating_avg).replace('.', ',') }}</span>
+        <span v-if="m.rating_avg" class="rating">★ {{ Number(m.rating_avg).toFixed(1).replace('.', ',') }}</span>
       </div>
       <div class="muted">
         {{ m.title || m.craft_label }} · {{ m.city_name }}<template v-if="m.distance_km != null">, {{ m.distance_km }} km</template>

@@ -8,7 +8,8 @@ export const useMe = () => {
 
   async function load(id: string) {
     if (me.value?.id === id) return me.value
-    const { data } = await supabase.from('profiles').select('*').eq('id', id).maybeSingle()
+    const { data, error } = await supabase.from('profiles').select('*').eq('id', id).maybeSingle()
+    if (error) throw error
     me.value = data
     return data
   }
